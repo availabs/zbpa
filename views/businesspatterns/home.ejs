@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/nvd3.css">
+<!-- Header-->
+  <%- partial ('../partials/header') %>
+
+<!-- Main Page content -->
+  <div id="map"></div>
+  <div id="sidebar">
+    <%- partial('../partials/sidebar') %>
+  </div>
+
+<!-- for floating info -->
+  <div id="info"></div>
+  
+<!-- Modals -->
+
+    
+
+
+  <script src="/leaflet-0.7.2/leaflet.js"></script>
+  <script src="/leaflet-sidebar/L.Control.Sidebar.js"></script>
+  <script src="/js/dependencies/d3.v3.min.js"></script>
+  <script src="/js/dependencies/topojson.js"></script>
+  <script src="/js/dependencies/nvd3.min.js"></script>
+  <script src="/js/dependencies/d3leaflet-layers.js"></script>
+
+  <script src="/data-sources/urbanAreas.js"></script>
+  <script src="/js/main.js"></script>

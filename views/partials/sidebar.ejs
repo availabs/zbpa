@@ -1,0 +1,40 @@
+
+<div class="row" style='padding-top:10px'>
+	<div class="col-md-12">
+		
+			<form class="form-horizontal label-left" action="#">
+                <fieldset>
+                    <legend class="section">Select Area and NAICS</legend>
+                    <div class="control-group" style='padding-left:20px'>
+                        <div class="controls form-group">
+                            <select  class="form-control" style="width:100%"; class="chzn-select select-block-level" id="default-select" ng-model="active_area">
+                                <option ng-repeat="(key,val) in urbanAreas" value="{{key}}">{{val.name}}</option>
+                                
+                            </select>
+                            <span class="help-block">
+                                <code>Select the Urban Area or Click it on the map</code>
+                            </span>
+                        </div>
+                    
+                    
+                        <div class="controls form-group">
+                            <select  class="form-control" style="width:100%"; class="chzn-select select-block-level" id="default-select" ng-model="current_naics2">
+                                <option ng-repeat="(key,val) in naics2" value="{{key}}">{{key+'-'+val}}</option>
+                            </select>
+                            <span class="help-block">
+                                <code>Select NAICS Code</code>
+                            </span>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+            {{active_area}}
+			<div id="barChart">
+				<svg style='height:500px' class="chart"> </svg>
+			</div>
+            <div id="dataTable">
+                
+            </div>
+	</div>
+</div>
+
