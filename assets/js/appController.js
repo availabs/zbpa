@@ -27,7 +27,6 @@ app.controller('AppCtrl', function MapCtrl($scope, $modal, $log, $http,$sce){
     	return $sce.trustAsResourceUrl(src);
   	} 
 	$scope.$watch('active_area',function(){
-		console.log('naics2',$scope.current_naics2);
 		var zip_split = JSON.stringify($scope.urbanAreas[$scope.active_area].zip_codes.split(',')).replace('[','').replace(']','').replace(/"/g,"'");
 		d3.json('/zpb/total')
 		.post(JSON.stringify({zip:zip_split,naics:$scope.current_naics2}),function(error,data){
@@ -37,7 +36,6 @@ app.controller('AppCtrl', function MapCtrl($scope, $modal, $log, $http,$sce){
 		})
 	});
 	$scope.$watch('current_naics2',function(){
-		console.log('naics2',$scope.current_naics2);
 		var zip_split = JSON.stringify($scope.urbanAreas[$scope.active_area].zip_codes.split(',')).replace('[','').replace(']','').replace(/"/g,"'");
 		d3.json('/zpb/total')
 		.post(JSON.stringify({zip:zip_split,naics:$scope.current_naics2}),function(error,data){
@@ -59,7 +57,6 @@ function drawTable($scope){
 		table+="</tr>"
 	})
 	table+="</tbody></table>";
-	console.log(table);
 	$('#dataTable').html(table);
 }
 
