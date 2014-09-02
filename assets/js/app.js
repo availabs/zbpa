@@ -5,5 +5,4 @@
  *
  * @type {angular.Module}
  **/
-
 var app = angular.module('ngBootleaf', ['ui.bootstrap']);

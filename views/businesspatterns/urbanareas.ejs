@@ -1,0 +1,44 @@
+<%- partial ('../partials/header') %>
+<style>
+	body{
+		margin-top: 30px;
+	}
+	.nv-line{
+		fill:none;
+	}
+</style>
+<div class="container">
+
+    <!-- Introduction Row -->
+    <div class="row" ng-controller="urbanAppController">
+        <div class="col-lg-12">
+            <h1 class="page-header">Total Number of Employees in NY Urban Areas from 1992 to 2010
+            </h1>
+            <div id="urbanEmploymentGraph">
+            	<svg style='height:500px' class="chart"> </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Members Row -->
+    
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright © Your Website 2014</p>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </footer>
+
+</div>
+<script src="/js/dependencies/d3.v3.min.js"></script>
+<script src="/js/dependencies/nvd3.min.js"></script>
+<script src="/js/dependencies/topojson.js"></script>
+<script src="/data-sources/urbanAreas.js"></script>
+<script src="/js/urbanAppController.js"></script>

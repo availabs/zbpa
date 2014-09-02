@@ -1,0 +1,12 @@
+#!/bin/bash
+#adds extra | to end
+z="zbp"
+t="totals.txt"
+for i in {0..9}
+do
+	sed -i 's/$/|/' $z"0"$i$t
+	done
+for i in {94..99}
+do
+	sed -i 's/$/|/' $z$i$t
+done

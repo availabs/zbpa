@@ -28,7 +28,11 @@ module.exports.routes = {
   //
   // (Alternatively, remove this and add an `index.html` file in your `assets` directory)
   '/': 'BusinessPatternsController.home',
-  '/zpb/total' :'BusinessPatternsController.urbanBusinessSum'
+  '/urbanareas': 'BusinessPatternsController.urbanAreas',
+  '/zbp/urbanTotalEmployees' : 'BusinessPatternsController.urbanAreasEmployment',
+  '/zpb/total' :'BusinessPatternsController.urbanBusinessSum',
+  '/zbp/totalEmployees' :'BusinessPatternsController.zbpTotalEmployees'
+  //'/zipgeo' :'BusinessPatternsController.urbanAreasGeo'
 
 
   // Custom routes here...
