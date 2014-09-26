@@ -6,59 +6,98 @@
 	.nv-line{
 		fill:none;
 	}
-    body {
-      width: 960px;
-      margin: auto;
-      position: relative;
-    }
+  body {
+    width: 960px;
+    height: 600px;
+    margin: auto;
+    position: relative;
+  }
 
-    svg {
-      font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    }
+  svg {
+    font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
 
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
+  .page-header{
+    margin-top: 100px;
+  }
 
-    /*.axis--y path {
-      display: none;
-    }*/
+  .city--hover {
+    stroke: #000;
+  }
 
-    .urbanAreas {
-      fill: none;
-      stroke: #aaa;
-      stroke-linejoin: round;
-      stroke-linecap: round;
-      stroke-width: 1.5px;
-    }
+  path {
+  stroke-width: 1;
+  fill: none;
+  }
+  
+  .data {
+    fill: none;
+    stroke: #aaa;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-width: 1.5px;
+  }
 
-    .urbanAreas--hover {
-      stroke: #000;
-    }
+  .data1 {
+    stroke: black;
+  }
 
-    .focus text {
-      text-anchor: middle;
-      text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
-    }
+  .data2 {
+    stroke: grey;
+  }
 
-    .voronoi path {
-      fill: none;
-      pointer-events: all;
-    }
+  .axis {
+    shape-rendering: crispEdges;
+  }
 
-    .voronoi--show path {
-      stroke: red;
-      stroke-opacity: .2;
-    }
+  .xAxis line {
+    stroke: lightgrey;
+  }
 
-    #form {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-    }
+  .xAxis .minor {
+    stroke-opacity: .5;
+  }
+
+  .xAxis path {
+    /*display: none;*/
+  }
+
+  .xAxis text {
+    font-size: 10px;
+  }
+
+  .yAxis line, .yAxis path {
+    fill: none;
+    stroke: #000;
+  }
+
+  .yAxis text {
+    font-size: 12px;
+  }
+
+  .focus text {
+    text-anchor: middle;
+    text-shadow: 0 1px - #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  }
+
+  .voronoi path {
+    fill: none;
+    pointer-events: all;
+    stroke: #000;
+    stroke-width:0.2;
+  }
+
+  .voronoi--show path {
+    stroke: red;
+    stroke-opacity: .2;
+  }
+
+  #form {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+  }
+    
 </style>
 <div class="container">
 
@@ -90,7 +129,7 @@
     </footer>
 
 </div>
-<script src="/js/dependencies/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="/js/dependencies/nvd3.min.js"></script>
 <script src="/js/dependencies/topojson.js"></script>
 <script src="/data-sources/urbanAreas.js"></script>
