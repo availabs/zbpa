@@ -62,7 +62,33 @@ app.controller('AppCtrl', function MapCtrl($scope, $modal, $log, $http,$sce){
 	
 });
 
+function colorMap($scope){
+	var color = d3.scale.threshold()
+    .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
+    .range(["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"]);
 
+	var svg = d3.select("body").append("svg")
+	    .attr("width", width)
+	    .attr("height", height);
+
+	d3.json("ny.json", function(error, ny) {
+	  if (error) return console.error(error);
+
+ 	 // group tracts by color for faster rendering
+ 	svg.append("g")
+      .attr("class", "tract")
+    .selectAll("path")
+      .data(d3.nest()
+        .key(function(d) { return color(d.properties.population / d.properties.area * 2.58999e6); }) // convert square meters to square miles
+        .entries(ny.objects.tracts.geometries))
+    .enter().append("path")
+      .style("fill", function(d) { return d.key; })
+      .attr("d", function(d) { return path(topojson.merge(ny, d.values)); });
+	});
+
+	d3.select(self.frameElement).style("height", height + "px");
+}
+	
 function drawTable($scope){
 	var table = "<table class='table table-hover'><thead><tr><th></th><th>2010</th><th>2011</th><th>2012</th></tr></thead><tbody>";
 	var data = parseData($scope);

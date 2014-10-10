@@ -25,6 +25,11 @@ module.exports = {
       	res.view();
 		
 	},
+	zipmap : function(req,res){
+		
+      	res.view();
+		
+	},
 	urbanAreas : function(req,res){
 		
 		

@@ -43,9 +43,7 @@
       }
     
       paths = g.selectAll("path");
-      join = paths.data(this.geojson.features, function(d) {
-        return d.properties.id;
-      });
+      join = paths.data(this.geojson.features);
       if(type == 'point'){
          feature = join.enter().append("circle");
          feature.attr('r',radius);

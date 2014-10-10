@@ -41,7 +41,7 @@ function drawVoronoi($scope){
 	
 
 	var data = parseVoronoiData($scope);
-	console.log(data);
+	//console.log(data);
 	var line = d3.svg.line()
 		.x(function(d) { 
 			//console.log('Plotting X1 value for data point');
@@ -110,21 +110,23 @@ function drawVoronoi($scope){
 	    .data(data)
 		.enter().append("path")
 			.attr("class", function(d,i){ d.name = urbanAreaNames[i]; return 'data '+urbanAreaNames[i];})
-			.attr('d',function(d,i) { d.line = this; return line(d); });
+			.attr('d',function(d,i) { d.values = d; d.line = this; return line(d); });
+	
 	console.log(data);
 	
 	voronoiGroup = graph.append("g")
 		.attr("class", "voronoi");
 
+
 	voronoiGroup.selectAll("path")
 		.data(voronoi(d3.nest()
 			.key(function(d) { return x(d[0]) + "," + y(d[1]); })
 			.rollup(function(v) { return v[0]; })
-			.entries(d3.merge(data.map(function(d) { return d})))
+			.entries(d3.merge(data.map(function(d) {  return d.values}) ) )
 			.map(function(d) { return d.values})))
 	  .enter().append("path")
 		.attr("d", function(d) {  return "M" + d.join("L") + "Z"; })
-		.datum(function(d) {return d; })
+		.datum(function(d) { console.log(d); return d; })
 		.on("mouseover", mouseover)
 		.on("mouseout", mouseout);
 
