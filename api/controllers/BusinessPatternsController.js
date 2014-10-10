@@ -28,7 +28,22 @@ module.exports = {
 	zipmap : function(req,res){
 		
       	res.view();
-		
+	},
+	zipData : function(req,res){
+
+		var sql = "SELECT ap, zip, FROM [zbp.zbp_totals] WHERE year=2012 AND SUBSTR(zip, 1, 2) in ('10','11', '12', '13','14') GROUP BY zip, ap, ORDER BY zip asc;";
+ 		var request = bigQuery.jobs.query({
+	    	kind: "bigquery#queryRequest",
+	    	projectId: 'avail-wim',
+	    	timeoutMs: '30000',
+	    	resource: {query:sql,projectId:'avail-wim'},
+	    	auth: jwt
+	    },
+	    function(err, response) {
+      		if (err) console.log('Error:',err);
+      		
+      		res.json({data:response})
+	    });
 	},
 	urbanAreas : function(req,res){
 		

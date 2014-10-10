@@ -139,10 +139,7 @@
       }
       
       if(typeof layer_options.choropleth != 'undefined'){
-        feature.attr('fill',function(d){
-          return layer_options.choropleth.scale(d.properties[layer_options.choropleth.key]*1)
-        
-        })
+        feature.attr('fill', layer_options.choropleth)
       }
 
       if(typeof layer_options.style != 'undefined'){

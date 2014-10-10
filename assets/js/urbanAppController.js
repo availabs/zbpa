@@ -17,6 +17,7 @@ app.controller('urbanAppController', function urbanAppController($scope){
 	d3.json('/zbp/urbanTotalEmployees')
 		.post(JSON.stringify({sql:sql}),function(err,data){
 			$scope.current_data = data;
+			
 			drawVoronoi($scope);
 			//drawLineGraph($scope);
 		})
