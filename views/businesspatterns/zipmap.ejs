@@ -9,6 +9,15 @@
   fill: #f00;
   opacity: 0.5;
 }
+.inputs {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	left: 10px;
+	width: 250px;
+	height: 100px;
+	background-color: #fff;
+}
 </style>
 <!-- Header-->
   
@@ -18,15 +27,28 @@
 
 <!-- for floating info -->
   <div id="info"></div>
-  
+
+	<div class="inputs">
+		<input id="slider1" type="range" min="1994" max="2012" step="1" ng-model="year" />
+		{{year}}
+		<button ng-click="play()">Play</button>
+		<form action="">
+			<input ng-click="mode(&quot;ap&quot;)" id="ap" type="radio" name="mode" value="ap" checked="checked">Annual Payroll
+			<input ng-click="mode(&quot;emp&quot;)" id="emp" type="radio" name="mode" value="emp">Employees<br>
+			<input ng-click="mode(&quot;ap/emp&quot;)" id="ap/emp" type="radio" name="mode" value="ap/emp">Annual Payroll Per Capita			
+		</form>
+	</div>  
 <!-- Modals -->
 
     
 </div>
 
+
+
 <script src="/leaflet-0.7.2/leaflet.js"></script>
 <script src="/js/dependencies/d3.v3.min.js"></script>
 <script src="/js/dependencies/topojson.js"></script>
 <script src="/js/dependencies/d3leaflet-layers.js"></script>
-
+<script src="http://d3js.org/colorbrewer.v1.min.js"></script>
 <script src="/controllers/businesspatterns/zipmapctrl.js"></script>
+

@@ -31,7 +31,7 @@ module.exports = {
 	},
 	zipData : function(req,res){
 
-		var sql = "SELECT ap, zip, FROM [zbp.zbp_totals] WHERE year=2012 AND SUBSTR(zip, 1, 2) in ('10','11', '12', '13','14') GROUP BY zip, ap, ORDER BY zip asc;";
+ 		var sql = "SELECT year, zip, ap, emp FROM [zbp.zbp_totals] WHERE SUBSTR(zip, 1, 2) in ('10','11', '12', '13','14') GROUP BY year, zip, ap, emp ORDER BY year asc;";
  		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
 	    	projectId: 'avail-wim',

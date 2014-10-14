@@ -16,10 +16,23 @@
       this.geojson = data;
       this.updateData();
     },
+    transition:function(){
+       var g,paths,layer_options;
+       g = this._g;
+       layer_options = this.options
+       paths = g.selectAll("path");
+       paths
+       .transition()
+       .duration(2000)
+       .attr('fill',layer_options.choropleth)
+
+    },
     updateData: function() {
+      console.log('update data');
       var bounds, feature, g, join, path, paths, project, reset, styler, svg,map,layer_options,type,radius;
       map = this._map
       g = this._g;
+
 
       svg = this._svg;
       layer_options = this.options
