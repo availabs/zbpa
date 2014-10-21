@@ -11,13 +11,18 @@
 }
 .inputs {
 	position: absolute;
-	top: 20px;
+	top: 40px;
 	right: 20px;
-	left: 10px;
-	width: 250px;
-	height: 100px;
-	background-color: #fff;
+	left: 30px;
+	width: 312.5px;
+	height: 125px;
+	padding: 20px;
+	border-style: groove;
+	border-color: #909090;
+	background-color: #E8E8E8;
+	border-radius: 13%;
 }
+
 </style>
 <!-- Header-->
   
@@ -28,16 +33,16 @@
 <!-- for floating info -->
   <div id="info"></div>
 
-	<div class="inputs">
-		<input id="slider1" type="range" min="1994" max="2012" step="1" ng-model="year" />
-		{{year}}
-		<button ng-click="play()">Play</button>
-		<form action="">
-			<input ng-click="mode(&quot;ap&quot;)" id="ap" type="radio" name="mode" value="ap" checked="checked">Annual Payroll
-			<input ng-click="mode(&quot;emp&quot;)" id="emp" type="radio" name="mode" value="emp">Employees<br>
-			<input ng-click="mode(&quot;ap/emp&quot;)" id="ap/emp" type="radio" name="mode" value="ap/emp">Annual Payroll Per Capita			
-		</form>
-	</div>  
+  <div class="inputs">
+	  <input id="slider1" type="range" min="1994" max="2012" step="1" ng-model="year" />
+	  {{year}}
+	  <button ng-click="play()">Play</button>
+	  <form action="">
+		  <input ng-click="mode(&quot;ap&quot;)" id="ap" type="radio" name="mode" value="ap" checked="checked">Annual Payroll
+		  <input ng-click="mode(&quot;emp&quot;)" id="emp" type="radio" name="mode" value="emp">Employees<br>
+		  <input ng-click="mode(&quot;ap/emp&quot;)" id="ap/emp" type="radio" name="mode" value="ap_emp">Annual Payroll Per Capita	
+	  </form>
+  </div>  
 <!-- Modals -->
 
     
