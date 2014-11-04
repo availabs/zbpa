@@ -154,7 +154,7 @@ function ZipCtrl($scope){
 			});
 			
 			colorScale = d3.scale.quantile().domain(scaleDomain).range(colors);
-			//todo: updating the scale
+			//todo: updating the scale w/ every d3leaflet-layers.jss
 			var legend = d3.select("#legend")
 				.append("ul")
 				  .attr("class", "list-inline");
