@@ -23,6 +23,29 @@
 	border-radius: 13%;
 }
 
+#legend{
+  position: absolute;
+  top: 70%;
+  left: 60%;
+  width: 600px;
+  height: 160px;
+  padding: 10px;
+  border-style: groove;
+  border-color: #909090;
+  background-color: #E8E8E8;
+  border-radius: 13%;
+  font-size: 21px;
+  /*padding: 1.5em 0 0 1.5em;*/
+}
+
+li.key {
+	border-top-width: 15px; 
+	border-top-style: solid;
+	font-size: .75em;
+	width: 10%;
+	padding-left: 0;
+	padding-right: 0;
+}
 </style>
 <!-- Header-->
   
@@ -42,7 +65,11 @@
 		  <input ng-click="mode(&quot;emp&quot;)" id="emp" type="radio" name="mode" value="emp">Employees<br>
 		  <input ng-click="mode(&quot;ap/emp&quot;)" id="ap/emp" type="radio" name="mode" value="ap_emp">Annual Payroll Per Capita	
 	  </form>
+	  
   </div>  
+  <div id="legend">
+  	<!-- <strong><center>Legend</center></strong> -->
+  </div>
 <!-- Modals -->
 
     

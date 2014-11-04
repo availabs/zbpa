@@ -13,10 +13,11 @@ function ZipCtrl($scope){
 	  zoomControl: false
 	});
 	var scaleDomain, colorScale;
+
 	$scope.year = "1994";
 	$scope.dataMode = 2; //2 is emp, 3 is ap, 4 is ap/emp.
 	$scope.$watch("year", function(){
-		console.log($scope.year);
+		//console.log($scope.year);
 		if(mapLoaded)
 			ziplayer.transition();
 	});
@@ -43,7 +44,6 @@ function ZipCtrl($scope){
 			case "ap": $scope.dataMode = 2; break;
 			case "emp": $scope.dataMode = 3; break;
 			case "ap_emp": $scope.dataMode = 4; break;
-			default: 
 		}
 		if(mapLoaded && $scope.dataMode == 4){
 			scaleDomain = [];
@@ -64,6 +64,7 @@ function ZipCtrl($scope){
 			ziplayer.transition(); 
 		}
 	}
+
 	//TODO: legend w/ quantiles.
 	function showPopup(d) {
 		popup.style("display", "block");
@@ -146,18 +147,36 @@ function ZipCtrl($scope){
 	d3.json('/zipData')
 		.post(function(err,data){
 			$scope.current_data = data;		
-			console.log(data);
-
+			//console.log(data);
 			scaleDomain = [];
 			data.data.rows.map(function(zip){
 				scaleDomain.push(+zip.f[$scope.dataMode].v)
 			});
-			console.log(scaleDomain);
-			//var colorScale = d3.scale.linear().domain([ d3.min(scaleDomain), d3.max(scaleDomain) ]).range(['#fff' , '#000']);
+			
 			colorScale = d3.scale.quantile().domain(scaleDomain).range(colors);
-			console.log('qunatiles',colorScale.quantiles())
-			//var colorScale = d3.scale.sqrt().range(colorbrewer.Spectral[9].reverse());
+			//todo: updating the scale
+			var legend = d3.select("#legend")
+				.append("ul")
+				  .attr("class", "list-inline");
+			legend.html(function(){
+				switch($scope.dataMode){
+					case 2: return "<center><strong>Annual Payroll"; break;
+					case 3: return "<center><strong><center><strong>Annual Employees"; break;
+					case 4: return "<center><strong>Annual Pay per Employee"; break;
+					default: return "<center><strong>Legend";
+				}
+			});
+			var keys = legend.selectAll("li.key")
+				.data(colorScale.range());
 
+			keys.enter().append("li")
+				.attr("class", "key")
+				.style("border-top-color", String)
+				.text(function(d) {
+					var r = colorScale.invertExtent(d);
+					return Math.round(r[0]);
+				});
+			//http://eyeseast.github.io/visible-data/2013/08/27/responsive-legends-with-d3/
 			d3.json('/geo/ny.json',function(err,zips){
   
 		  		var options = {
