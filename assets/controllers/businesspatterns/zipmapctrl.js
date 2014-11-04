@@ -12,8 +12,12 @@ function ZipCtrl($scope){
 	  layers: [mapquestOSM],
 	  zoomControl: false
 	});
+	var sortedData = {1994 : {}, 1995: {}, 1996: {}, 1997: {}, 1998: {}, 1999: {}, 2000: {}, 2001: {}, 2002: {}, 2003: {}, 2004: {}, 2005: {}, 2006: {}, 2007: {}, 2008: {}, 2009: {}, 2010: {}, 2011: {}, 2012:{}};
 	var scaleDomain, colorScale;
-
+	var keys;
+	var legend = d3.select("#legend")
+		.append("ul")
+		  .attr("class", "list-inline");
 	$scope.year = "1994";
 	$scope.dataMode = 2; //2 is emp, 3 is ap, 4 is ap/emp.
 	$scope.$watch("year", function(){
@@ -21,7 +25,30 @@ function ZipCtrl($scope){
 		if(mapLoaded)
 			ziplayer.transition();
 	});
+
 	var popup = d3.select("#info");
+
+	var legendChange = function(){
+		legend.html(function(){
+			switch($scope.dataMode){
+				case 2: return "<center><strong>Annual Payroll"; break;
+				case 3: return "<center><strong><center><strong>Annual Employees"; break;
+				case 4: return "<center><strong>Annual Pay per Employee"; break;
+				default: return "<center><strong>Legend";
+			}
+		});
+		keys = legend.selectAll("li.key")
+			.data(colorScale.range())
+
+		keys.enter().append("li")
+			.attr("class", "key")
+			.style("border-top-color", String)
+			.text(function(d) {
+				var r = colorScale.invertExtent(d);
+				return Math.round(r[0]);
+		});
+	}
+
 	$scope.play = function(){
 		function myLoop(){
 			setTimeout(function(){
@@ -43,27 +70,27 @@ function ZipCtrl($scope){
 		switch(_dataMode){
 			case "ap": $scope.dataMode = 2; break;
 			case "emp": $scope.dataMode = 3; break;
-			case "ap_emp": $scope.dataMode = 4; break;
+			case "ap/emp": $scope.dataMode = 4; break;
 		}
+		scaleDomain = [];
 		if(mapLoaded && $scope.dataMode == 4){
-			scaleDomain = [];
 			$scope.current_data.data.rows.map(function(zip){
-				scaleDomain.push(parseInt(zip.f[2].v, 10) / parseInt(zip.f[3], 10)) // ISSUE: only pushing the emp data
+				scaleDomain.push(+zip.f[2].v/+zip.f[3].v);
 			});
-			console.log(scaleDomain);
-			colorScale = d3.scale.quantile().domain(scaleDomain).range(colors);
-			ziplayer.transition(); 
+			 
 		}
 		else if(mapLoaded){
-			scaleDomain = [];
 			$scope.current_data.data.rows.map(function(zip){
 				scaleDomain.push(+zip.f[$scope.dataMode].v)
 			});
-			console.log(scaleDomain);
-			colorScale = d3.scale.quantile().domain(scaleDomain).range(colors);
-			ziplayer.transition(); 
 		}
+		console.log(scaleDomain);
+		colorScale = d3.scale.quantile().domain(scaleDomain).range(colors);
+		legendChange();
+		ziplayer.transition();
 	}
+
+	
 
 	//TODO: legend w/ quantiles.
 	function showPopup(d) {
@@ -88,6 +115,7 @@ function ZipCtrl($scope){
 			if($scope.current_data.data.rows[i].f[1].v === d.properties.geoid.toString() && $scope.current_data.data.rows[i].f[0].v === $scope.year){
 				//console.log(($scope.current_data.data.rows[ti].f[0].v));
 				if($scope.dataMode === 4){
+					console.log($scope.current_data.data.rows[i].f[3].v);
 					data = $scope.current_data.data.rows[i].f[2].v/$scope.current_data.data.rows[i].f[3].v;
 				}
 				else
@@ -144,20 +172,32 @@ function ZipCtrl($scope){
 	function hidePopup() {
 		popup.style('display', 'none')
 	}
+	function sortData() {
+		var ti = 0;
+		var dd = [];
+		dd = $scope.current_data.data.rows;
+		while(ti < dd.length){ 
+			var y = +dd[ti].f[0].v;//not iterating thro0ugh the whole thing right now
+			var z = dd[ti].f[1].v; //FIX
+			//sortedData[y][z] =   //FIX	
+			var d = dd[ti].f;      //FIX
+			sortedData[y] = {z : d} //each final data thingy is an array of v objs.
+			ti++;
+		}
+	}
 	d3.json('/zipData')
 		.post(function(err,data){
 			$scope.current_data = data;		
-			//console.log(data);
+			console.log(data);
 			scaleDomain = [];
 			data.data.rows.map(function(zip){
 				scaleDomain.push(+zip.f[$scope.dataMode].v)
 			});
-			
+			//var sortedData = {'year':{'12203':[], '12204':[]},'1995':{'12203':[],'12223',}}
+			//sortedData[1995]['12203'] = []
+
 			colorScale = d3.scale.quantile().domain(scaleDomain).range(colors);
-			//todo: updating the scale w/ every d3leaflet-layers.jss
-			var legend = d3.select("#legend")
-				.append("ul")
-				  .attr("class", "list-inline");
+			
 			legend.html(function(){
 				switch($scope.dataMode){
 					case 2: return "<center><strong>Annual Payroll"; break;
@@ -166,7 +206,7 @@ function ZipCtrl($scope){
 					default: return "<center><strong>Legend";
 				}
 			});
-			var keys = legend.selectAll("li.key")
+			keys = legend.selectAll("li.key")
 				.data(colorScale.range());
 
 			keys.enter().append("li")
@@ -193,27 +233,10 @@ function ZipCtrl($scope){
 
 			});
 			
-			function zipSalary(d){
-				//console.log(d.properties.geoid);
-				//console.log('zipSalary');
-				var data;
-				var ti = 0;
-				while(ti < $scope.current_data.data.rows.length){ //could binary search, but I'm lazy
-					if($scope.current_data.data.rows[ti].f[1].v === d.properties.geoid.toString() && $scope.current_data.data.rows[ti].f[0].v === $scope.year){
-						//console.log(($scope.current_data.data.rows[ti].f[0].v));
-						if($scope.dataMode === 4)
-							data = $scope.current_data.data.rows[ti].f[2].v/$scope.current_data.data.rows[ti].f[3].v;
-						else
-							data = $scope.current_data.data.rows[ti].f[$scope.dataMode].v;
-						break;
-					}
-					ti++;
-				}
-				//if(Math.round((Math.log(data)/Math.log(2))*10).toString(16).toUpperCase() > 0)
-					//return "#FFFFFF"
-				//return "#" + (Math.round((Math.log(data)/Math.log(2))*10).toString(16).toUpperCase()).toString(16) + "0000";	
-				return colorScale(data);
-				
+			function zipSalary(d){	
+				sortData();			
+				console.log(sortedData);
+				return colorScale($scope.dataMode === 4 ? sortedData[$scope.year][d.properties.geoid.toString()][2].v/sortedData[$scope.year][d.properties.geoid.toString()][2].v : data = sortedData[$scope.year][d.properties.geoid.toString()][$scope.dataMode].v);				
 			}
 	});
 	
