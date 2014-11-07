@@ -31,10 +31,11 @@ module.exports.routes = {
   '/zip': 'BusinessPatternsController.zipmap',
   '/zipData': 'BusinessPatternsController.zipdata',
   '/urbanareas': 'BusinessPatternsController.urbanAreas',
+  '/zipgeo' :'BusinessPatternsController.urbanAreasGeo',
   '/zbp/urbanTotalEmployees' : 'BusinessPatternsController.urbanAreasEmployment',
   '/zpb/total' :'BusinessPatternsController.urbanBusinessSum',
   '/zbp/totalEmployees' :'BusinessPatternsController.zbpTotalEmployees'
-  //'/zipgeo' :'BusinessPatternsController.urbanAreasGeo'
+
 
 
   // Custom routes here...

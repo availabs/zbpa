@@ -33,8 +33,6 @@ app.controller('AppCtrl', function MapCtrl($scope, $modal, $log, $http,$sce){
 			drawGroupGraph($scope);
 			drawTotalGraph($scope);
 			drawTable($scope);
-			//console.log(data);
-		})
 		d3.json('/zbp/totalEmployees')
 		.post(JSON.stringify({zip:zip_split}),function(error,data){
 			$scope.current_data = data;

@@ -45,6 +45,23 @@ module.exports = {
       		res.json({data:response})
 	    });
 	},
+	zipNaicsData : function(req,res){
+		var naics = req.param("naics");
+		var year = req.param("year");
+		var sql = "SELECT year, naics, zip FROM [zbp.zbp_details] WHERE naics like " + naics + " AND year like " + year + " group by year, naics, zip, order by zip asc;";
+		var request = bigQuery.jobs.query({
+			kind: "bigquer@queryRequest",
+			projectId: "avail-wim",
+			timeoutMs: "30000",
+			resource: {query:sql,projectId:"avail-wim"},
+			auth: jwt
+		}, 
+		function(err, response) {
+			if (err) console.log('Error:', err);
+
+			res.json({data:response})
+		});
+	},
 	urbanAreas : function(req,res){
 		
 		

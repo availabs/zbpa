@@ -91,8 +91,6 @@ function ZipCtrl($scope){
 	}
 
 	
-
-	//TODO: legend w/ quantiles.
 	function showPopup(d) {
 		popup.style("display", "block");
 		var i = 0,
@@ -177,11 +175,10 @@ function ZipCtrl($scope){
 		var dd = [];
 		dd = $scope.current_data.data.rows;
 		while(ti < dd.length){ 
-			var y = +dd[ti].f[0].v;//not iterating thro0ugh the whole thing right now
-			var z = dd[ti].f[1].v; //FIX
-			//sortedData[y][z] =   //FIX	
-			var d = dd[ti].f;      //FIX
-			sortedData[y] = {z : d} //each final data thingy is an array of v objs.
+			var y = +dd[ti].f[0].v;//year
+			var z = dd[ti].f[1].v.toString(); //zip
+			var d = dd[ti].f; //the array of data
+			sortedData[y][z] = d; //each final data thingy is an array of v objs.
 			ti++;
 		}
 	}
@@ -193,6 +190,7 @@ function ZipCtrl($scope){
 			data.data.rows.map(function(zip){
 				scaleDomain.push(+zip.f[$scope.dataMode].v)
 			});
+			sortData();	
 			//var sortedData = {'year':{'12203':[], '12204':[]},'1995':{'12203':[],'12223',}}
 			//sortedData[1995]['12203'] = []
 
@@ -233,10 +231,10 @@ function ZipCtrl($scope){
 
 			});
 			
-			function zipSalary(d){	
-				sortData();			
-				console.log(sortedData);
-				return colorScale($scope.dataMode === 4 ? sortedData[$scope.year][d.properties.geoid.toString()][2].v/sortedData[$scope.year][d.properties.geoid.toString()][2].v : data = sortedData[$scope.year][d.properties.geoid.toString()][$scope.dataMode].v);				
+			function zipSalary(d){			
+				if(sortedData[$scope.year][d.properties.geoid])
+					return colorScale($scope.dataMode === 4 ? sortedData[$scope.year][d.properties.geoid][2].v/sortedData[$scope.year][d.properties.geoid][3].v : data = sortedData[$scope.year][d.properties.geoid][$scope.dataMode].v);				
+				else return "#000";
 			}
 	});
 	
