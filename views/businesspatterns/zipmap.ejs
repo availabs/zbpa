@@ -14,8 +14,8 @@
 	top: 40px;
 	right: 20px;
 	left: 30px;
-	width: 312.5px;
-	height: 125px;
+	width: 420px;
+	height: 200px;
 	padding: 20px;
 	border-style: groove;
 	border-color: #909090;
@@ -36,6 +36,14 @@
   border-radius: 13%;
   font-size: 21px;
   /*padding: 1.5em 0 0 1.5em;*/
+}
+
+#naicsOne {
+	display:none;
+}
+
+#naicsTwo {
+	display:none;
 }
 
 li.key {
@@ -65,11 +73,12 @@ li.key {
 		  <input ng-click="mode(&quot;emp&quot;)" id="emp" type="radio" name="mode" value="emp">Employees<br>
 		  <input ng-click="mode(&quot;ap/emp&quot;)" id="ap/emp" type="radio" name="mode" value="ap_emp">Annual Payroll Per Capita	
 	  </form>
-	  
+	  <div id="naics">
+	  	<div id="naicsOne"></div>
+	  	<div id="naicsTwo"></div>
+	  </div>
   </div>  
-  <div id="legend">
-  	<!-- <strong><center>Legend</center></strong> -->
-  </div>
+  <div id="legend"></div>
 <!-- Modals -->
 
     

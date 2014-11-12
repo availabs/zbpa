@@ -45,10 +45,26 @@ module.exports = {
       		res.json({data:response})
 	    });
 	},
-	zipNaicsData : function(req,res){
+	zipGetNaics : function(req,res){
+		var twoDNaics = req.param("twoDNaics"); //Gives this the first two digits of the Naics code to work with
+		var sql = "SELECT naics FROM [zbp.zbp_details] where naics like '" + twoDNaics + "%' group by naics;";
+		var request = bigQuery.jobs.query({
+			kind:"bigquer@queryRequest",
+			projectId: "avail-wim",
+			timeoutMs: "30000",
+			resource: {query:sql,projectId:"avail-wim"},
+			auth: jwt
+		},
+		function(err, response) {
+			if (err) console.log('Error:', err);
+
+			res.json({data:response})
+		});
+	},
+	zipNaicsData : function(req,res){ //given a naics 
 		var naics = req.param("naics");
 		var year = req.param("year");
-		var sql = "SELECT year, naics, zip FROM [zbp.zbp_details] WHERE naics like " + naics + " AND year like " + year + " group by year, naics, zip, order by zip asc;";
+		var sql = "SELECT zip, sum(b2)*2.5 + sum(b3)*7 + sum(b4)*14.5 + sum(b5)*34.5 + sum(b6)*79.5 + sum(b7)*174.5 + sum(b8)*374.5 + sum(b9)*749.5 + sum(b10)*13700 as numEmployees FROM [zbp.zbp_details] where year = '"+year+"' and naics = '"+naics+"' group by zip order by zip;";
 		var request = bigQuery.jobs.query({
 			kind: "bigquer@queryRequest",
 			projectId: "avail-wim",

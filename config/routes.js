@@ -30,6 +30,8 @@ module.exports.routes = {
   '/': 'BusinessPatternsController.home',
   '/zip': 'BusinessPatternsController.zipmap',
   '/zipData': 'BusinessPatternsController.zipdata',
+  '/zipNaics': 'BusinessPatternsController.zipGetNaics',
+  '/zipNaicsData': 'BusinessPatternsController.zipNaicsData',
   '/urbanareas': 'BusinessPatternsController.urbanAreas',
   '/zipgeo' :'BusinessPatternsController.urbanAreasGeo',
   '/zbp/urbanTotalEmployees' : 'BusinessPatternsController.urbanAreasEmployment',

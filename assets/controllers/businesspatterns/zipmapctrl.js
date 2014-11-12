@@ -12,6 +12,8 @@ function ZipCtrl($scope){
 	  layers: [mapquestOSM],
 	  zoomControl: false
 	});
+	var twoNaicsKey = {'11': "Agriculture, forestry, fishing and hunting", "21": "Mining, quarrying, and oil and gas extraction", "22": "Utilities", "23": "Construction", "42": "Wholesale trade", "51": "Information", "52": "Finance and insurance", "53": "Real estate and rental and leasing", "54": "Professional, scientific, and technical services", "55": "Management of companies and enterprises", "56": "Administrative and support and waste management and remediation services", "61": "Educational services", "62": "Health care and social assistance", "71": "Arts, entertainment, and recreation", "72": "Accommodation and food services", "81": "Other services (except public administration)", "99": "Industries not classified", "--": "Total for all sectors"};
+	var fullNaicsKey = {};
 	var sortedData = {1994 : {}, 1995: {}, 1996: {}, 1997: {}, 1998: {}, 1999: {}, 2000: {}, 2001: {}, 2002: {}, 2003: {}, 2004: {}, 2005: {}, 2006: {}, 2007: {}, 2008: {}, 2009: {}, 2010: {}, 2011: {}, 2012:{}};
 	var scaleDomain, colorScale;
 	var keys;
@@ -28,11 +30,18 @@ function ZipCtrl($scope){
 
 	var popup = d3.select("#info");
 
+	var currentNaics = "------";
+	var naicsData;
+	/*
+	Have two extra appearing legend parts in top left:
+	first that appears when emp selected, allows user to choose first 2 numbers of NAICS and see the estimated totals for each industry on the map
+	second appears once first selected, allows user to specify a NAICS based off the first two numbers
+	*/
 	var legendChange = function(){
 		legend.html(function(){
 			switch($scope.dataMode){
 				case 2: return "<center><strong>Annual Payroll"; break;
-				case 3: return "<center><strong><center><strong>Annual Employees"; break;
+				case 3: return "<center><strong>Annual Employees"; break;
 				case 4: return "<center><strong>Annual Pay per Employee"; break;
 				default: return "<center><strong>Legend";
 			}
@@ -56,7 +65,7 @@ function ZipCtrl($scope){
 				// 	//$scope.year++;
 				if($scope.year < 2012){
 					myLoop(); //  ..  again which will trigger another 
-        			console.log('foo' + $scope.year);
+        			//console.log('foo' + $scope.year);
         			$scope.year++;
         			$scope.year = $scope.year+'';
         			$scope.$apply();
@@ -66,7 +75,7 @@ function ZipCtrl($scope){
 		myLoop();
 	}
 	$scope.mode = function(_dataMode){
-		console.log(_dataMode);
+		//console.log(_dataMode);
 		switch(_dataMode){
 			case "ap": $scope.dataMode = 2; break;
 			case "emp": $scope.dataMode = 3; break;
@@ -84,13 +93,12 @@ function ZipCtrl($scope){
 				scaleDomain.push(+zip.f[$scope.dataMode].v)
 			});
 		}
-		console.log(scaleDomain);
+		//console.log(scaleDomain);
 		colorScale = d3.scale.quantile().domain(scaleDomain).range(colors);
 		legendChange();
 		ziplayer.transition();
 	}
 
-	
 	function showPopup(d) {
 		popup.style("display", "block");
 		var i = 0,
@@ -113,7 +121,7 @@ function ZipCtrl($scope){
 			if($scope.current_data.data.rows[i].f[1].v === d.properties.geoid.toString() && $scope.current_data.data.rows[i].f[0].v === $scope.year){
 				//console.log(($scope.current_data.data.rows[ti].f[0].v));
 				if($scope.dataMode === 4){
-					console.log($scope.current_data.data.rows[i].f[3].v);
+					//console.log($scope.current_data.data.rows[i].f[3].v);
 					data = $scope.current_data.data.rows[i].f[2].v/$scope.current_data.data.rows[i].f[3].v;
 				}
 				else
@@ -128,7 +136,7 @@ function ZipCtrl($scope){
 			}
 			i++;
 		}
-		console.log(name, " ", data);
+		//console.log(name, " ", data);
 		popup.html($scope.year + "<br>" + name + "<br>" + data);
 	}
 
@@ -182,10 +190,29 @@ function ZipCtrl($scope){
 			ti++;
 		}
 	}
+
+	function showNaics(d){
+		naics.style("display", "block");
+		d3.json('/zipNaics') // param 2dNaics
+		.post(function(err,data){
+			fullNaicsKey = data;
+			console.log(fullNaicsKey);
+		})
+		d3.json('/zipNaicsData')
+			.post(JSON.stringify({naics:currentNaics,year:$scope.year}), function(error, data){
+				naicsData = data;
+				console.log(data);
+			})				
+	}
+
+	function hideNaics(){
+		naics.style("display", "none");
+	}
+
 	d3.json('/zipData')
 		.post(function(err,data){
 			$scope.current_data = data;		
-			console.log(data);
+			//console.log(data);
 			scaleDomain = [];
 			data.data.rows.map(function(zip){
 				scaleDomain.push(+zip.f[$scope.dataMode].v)
