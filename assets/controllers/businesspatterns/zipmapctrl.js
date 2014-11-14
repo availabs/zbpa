@@ -12,7 +12,7 @@ function ZipCtrl($scope){
 	  layers: [mapquestOSM],
 	  zoomControl: false
 	});
-	var twoNaicsKey = {'11': "Agriculture, forestry, fishing and hunting", "21": "Mining, quarrying, and oil and gas extraction", "22": "Utilities", "23": "Construction", "42": "Wholesale trade", "51": "Information", "52": "Finance and insurance", "53": "Real estate and rental and leasing", "54": "Professional, scientific, and technical services", "55": "Management of companies and enterprises", "56": "Administrative and support and waste management and remediation services", "61": "Educational services", "62": "Health care and social assistance", "71": "Arts, entertainment, and recreation", "72": "Accommodation and food services", "81": "Other services (except public administration)", "99": "Industries not classified", "--": "Total for all sectors"};
+	$scope.twoNaicsKey = {'11': "Agriculture, forestry, fishing and hunting", "21": "Mining, quarrying, and oil and gas extraction", "22": "Utilities", "23": "Construction", "42": "Wholesale trade", "51": "Information", "52": "Finance and insurance", "53": "Real estate and rental and leasing", "54": "Professional, scientific, and technical services", "55": "Management of companies and enterprises", "56": "Administrative and support and waste management and remediation services", "61": "Educational services", "62": "Health care and social assistance", "71": "Arts, entertainment, and recreation", "72": "Accommodation and food services", "81": "Other services (except public administration)", "99": "Industries not classified", "--": "Total for all sectors"};
 	var fullNaicsKey = {};
 	var sortedData = {1994 : {}, 1995: {}, 1996: {}, 1997: {}, 1998: {}, 1999: {}, 2000: {}, 2001: {}, 2002: {}, 2003: {}, 2004: {}, 2005: {}, 2006: {}, 2007: {}, 2008: {}, 2009: {}, 2010: {}, 2011: {}, 2012:{}};
 	var scaleDomain, colorScale;
@@ -30,7 +30,10 @@ function ZipCtrl($scope){
 
 	var popup = d3.select("#info");
 
-	var currentNaics = "------";
+	var naicsBasic = d3.select("#naics").select("#naicsBasic");
+	var naicsComplex = d3.select("#naics").select("#naicsComplex");
+	console.log(naicsBasic, naicsComplex);
+	$scope.current_naics2 = "--";
 	var naicsData;
 	/*
 	Have two extra appearing legend parts in top left:
@@ -78,7 +81,7 @@ function ZipCtrl($scope){
 		//console.log(_dataMode);
 		switch(_dataMode){
 			case "ap": $scope.dataMode = 2; break;
-			case "emp": $scope.dataMode = 3; break;
+			case "emp": $scope.dataMode = 3; showNaicsBasic(); break;
 			case "ap/emp": $scope.dataMode = 4; break;
 		}
 		scaleDomain = [];
@@ -97,6 +100,11 @@ function ZipCtrl($scope){
 		colorScale = d3.scale.quantile().domain(scaleDomain).range(colors);
 		legendChange();
 		ziplayer.transition();
+	}
+
+	$scope.basicStationClick = function(id){
+		$scope.current_naics2 = id;
+		console.log(id);
 	}
 
 	function showPopup(d) {
@@ -191,18 +199,22 @@ function ZipCtrl($scope){
 		}
 	}
 
-	function showNaics(d){
-		naics.style("display", "block");
+	function showNaicsBasic(){
+		naicsBasic.style('display', 'block');
 		d3.json('/zipNaics') // param 2dNaics
-		.post(function(err,data){
-			fullNaicsKey = data;
-			console.log(fullNaicsKey);
-		})
+			.post(JSON.stringify({twoDNaics: $scope.current_naics2}), function(err,data){
+				fullNaicsKey = data;
+				console.log("full key", fullNaicsKey);
+			})
+				
+	}
+	function showNaicsComplex() {
+		naicsComplex.style("display", "block");
 		d3.json('/zipNaicsData')
-			.post(JSON.stringify({naics:currentNaics,year:$scope.year}), function(error, data){
+			.post(JSON.stringify({naics:$scope.current_naics2,year:$scope.year}), function(error, data){
 				naicsData = data;
-				console.log(data);
-			})				
+				console.log("zipData", data);
+			})		
 	}
 
 	function hideNaics(){

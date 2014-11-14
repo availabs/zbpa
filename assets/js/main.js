@@ -54,17 +54,17 @@ sidebar.toggle();
                 ngclass:'isActive'
               };
 
-//map.addLayer(new L.GeoJSON.d3(urbanAreas,options));
+map.addLayer(new L.GeoJSON.d3(urbanAreas,options));
 
-d3.json('/geo/ny.json',function(err,zips){
-  console.log(zips);
-  var options = {
-                layerId:'zipcodes',
-                classed:'zip'
-                }; 
-  map.addLayer(new L.GeoJSON.d3(zips,options));
+// d3.json('/geo/ny.json',function(err,zips){
+//   console.log(zips);
+//   var options = {
+//                 layerId:'zipcodes',
+//                 classed:'zip'
+//                 }; 
+//   map.addLayer(new L.GeoJSON.d3(zips,options));
 
-})
+// })
 /* Highlight search box text on click */
 // $("#searchbox").click(function () {
 //   $(this).select();

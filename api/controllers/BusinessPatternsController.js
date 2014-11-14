@@ -48,6 +48,7 @@ module.exports = {
 	zipGetNaics : function(req,res){
 		var twoDNaics = req.param("twoDNaics"); //Gives this the first two digits of the Naics code to work with
 		var sql = "SELECT naics FROM [zbp.zbp_details] where naics like '" + twoDNaics + "%' group by naics;";
+		console.log("getting naics", sql);
 		var request = bigQuery.jobs.query({
 			kind:"bigquer@queryRequest",
 			projectId: "avail-wim",

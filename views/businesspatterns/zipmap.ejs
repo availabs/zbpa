@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/nvd3.css">
 <style>
 .zip {
   
@@ -38,11 +39,11 @@
   /*padding: 1.5em 0 0 1.5em;*/
 }
 
-#naicsOne {
+#naicsBasic {
 	display:none;
 }
 
-#naicsTwo {
+#naicsComplex {
 	display:none;
 }
 
@@ -74,8 +75,17 @@ li.key {
 		  <input ng-click="mode(&quot;ap/emp&quot;)" id="ap/emp" type="radio" name="mode" value="ap_emp">Annual Payroll Per Capita	
 	  </form>
 	  <div id="naics">
-	  	<div id="naicsOne"></div>
-	  	<div id="naicsTwo"></div>
+	  	<div id="naicsBasic">
+            <div class="controls form-group">
+                <select  class="form-control" style="width:100%"; class="chzn-select select-block-level" id="default-select" ng-model="current_naics2">
+                    <option ng-repeat="(key,val) in twoNaicsKey" value="{{key}}">{{key+'-'+val}}</option>
+                </select>
+                <span class="help-block">
+                    <code>Select NAICS Code</code>
+                </span>
+            </div>
+        </div>
+	  	<div id="naicsComplex">complex</div>
 	  </div>
   </div>  
   <div id="legend"></div>
