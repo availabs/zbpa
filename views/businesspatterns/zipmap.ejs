@@ -16,7 +16,7 @@
 	right: 20px;
 	left: 30px;
 	width: 420px;
-	height: 200px;
+	height: 240px;
 	padding: 20px;
 	border-style: groove;
 	border-color: #909090;
@@ -77,15 +77,21 @@ li.key {
 	  <div id="naics">
 	  	<div id="naicsBasic">
             <div class="controls form-group">
-                <select  class="form-control" style="width:100%"; class="chzn-select select-block-level" id="default-select" ng-model="current_naics2">
+                <select class="form-control" style="width:100%"; class="chzn-select select-block-level" id="default-select" ng-model="current_naics2">
                     <option ng-repeat="(key,val) in twoNaicsKey" value="{{key}}">{{key+'-'+val}}</option>
                 </select>
-                <span class="help-block">
+                <!-- <span class="help-block">
                     <code>Select NAICS Code</code>
-                </span>
+                </span> -->
             </div>
         </div>
-	  	<div id="naicsComplex">complex</div>
+	  	<div id="naicsComplex">
+	  		<div class="controls form-group">
+	  			<select class="form-control" style="width:100%"; class="chzn-select select-block-level" id="default-select" ng-model="current_naics_full">
+					<option ng-repeat="naics in fullNaicsKey" value="{{$index}}">{{naics.f[0].v}}</option>
+				</select>	  			
+	  		</div>
+	  	</div>
 	  </div>
   </div>  
   <div id="legend"></div>

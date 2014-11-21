@@ -13,7 +13,7 @@ function ZipCtrl($scope){
 	  zoomControl: false
 	});
 	$scope.twoNaicsKey = {'11': "Agriculture, forestry, fishing and hunting", "21": "Mining, quarrying, and oil and gas extraction", "22": "Utilities", "23": "Construction", "42": "Wholesale trade", "51": "Information", "52": "Finance and insurance", "53": "Real estate and rental and leasing", "54": "Professional, scientific, and technical services", "55": "Management of companies and enterprises", "56": "Administrative and support and waste management and remediation services", "61": "Educational services", "62": "Health care and social assistance", "71": "Arts, entertainment, and recreation", "72": "Accommodation and food services", "81": "Other services (except public administration)", "99": "Industries not classified", "--": "Total for all sectors"};
-	var fullNaicsKey = {};
+	$scope.fullNaicsKey = {};
 	var sortedData = {1994 : {}, 1995: {}, 1996: {}, 1997: {}, 1998: {}, 1999: {}, 2000: {}, 2001: {}, 2002: {}, 2003: {}, 2004: {}, 2005: {}, 2006: {}, 2007: {}, 2008: {}, 2009: {}, 2010: {}, 2011: {}, 2012:{}};
 	var scaleDomain, colorScale;
 	var keys;
@@ -27,18 +27,34 @@ function ZipCtrl($scope){
 		if(mapLoaded)
 			ziplayer.transition();
 	});
-
+	$scope.$watch("current_naics2", function(){
+		console.log($scope.current_naics2);
+		showNaicsBasic();
+		if($scope.current_naics2 != "--")
+			showNaicsComplex();
+	});
+	$scope.$watch("current_naics_full", function(){
+		console.log($scope.current_naics_full);
+		showNaicsComplex();
+	});
+	$scope.$watch("$viewContentLoaded", function(){
+		hideNaics();
+	});
 	var popup = d3.select("#info");
 
 	var naicsBasic = d3.select("#naics").select("#naicsBasic");
 	var naicsComplex = d3.select("#naics").select("#naicsComplex");
 	console.log(naicsBasic, naicsComplex);
 	$scope.current_naics2 = "--";
+	$scope.current_naics_full = "------";
 	var naicsData;
 	/*
 	Have two extra appearing legend parts in top left:
 	first that appears when emp selected, allows user to choose first 2 numbers of NAICS and see the estimated totals for each industry on the map
 	second appears once first selected, allows user to specify a NAICS based off the first two numbers
+
+	Map the emp data?
+	The angular value thing isn't working, returning 18 or wwhatever number you pick.
 	*/
 	var legendChange = function(){
 		legend.html(function(){
@@ -81,9 +97,13 @@ function ZipCtrl($scope){
 		//console.log(_dataMode);
 		switch(_dataMode){
 			case "ap": $scope.dataMode = 2; break;
-			case "emp": $scope.dataMode = 3; showNaicsBasic(); break;
+			case "emp": $scope.dataMode = 3; break;
 			case "ap/emp": $scope.dataMode = 4; break;
 		}
+		if($scope.dataMode == 3)
+			showNaicsBasic();
+		else
+			hideNaics();
 		scaleDomain = [];
 		if(mapLoaded && $scope.dataMode == 4){
 			$scope.current_data.data.rows.map(function(zip){
@@ -203,22 +223,26 @@ function ZipCtrl($scope){
 		naicsBasic.style('display', 'block');
 		d3.json('/zipNaics') // param 2dNaics
 			.post(JSON.stringify({twoDNaics: $scope.current_naics2}), function(err,data){
-				fullNaicsKey = data;
-				console.log("full key", fullNaicsKey);
+				$scope.fullNaicsKey = data.data.rows;
+				//$scope.$apply($scope.fullNaicsKey = data.data.rows)
+				console.log("full key", $scope.fullNaicsKey);
 			})
 				
 	}
 	function showNaicsComplex() {
 		naicsComplex.style("display", "block");
-		d3.json('/zipNaicsData')
-			.post(JSON.stringify({naics:$scope.current_naics2,year:$scope.year}), function(error, data){
-				naicsData = data;
-				console.log("zipData", data);
-			})		
+		if($scope.current_naics_full != "111111"){
+			d3.json('/zipNaicsData')
+				.post(JSON.stringify({naics:$scope.current_naics_full,year:$scope.year}), function(error, data){
+					naicsData = data;
+					console.log("zipData", data);
+				})		
+		}
 	}
 
 	function hideNaics(){
-		naics.style("display", "none");
+		naicsBasic.style("display", "none");
+		naicsComplex.style("display", "none");
 	}
 
 	d3.json('/zipData')
