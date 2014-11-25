@@ -23,28 +23,35 @@ function ZipCtrl($scope){
 	$scope.year = "1994";
 	$scope.dataMode = 2; //2 is emp, 3 is ap, 4 is ap/emp.
 	$scope.$watch("year", function(){
-		//console.log($scope.year);
+		//console.log($scope.year);\
 		if(mapLoaded)
 			ziplayer.transition();
+		if($scope.dataMode == 3) //The issue: this function and therefore the query will be made every time the slider is moved, so that means if it's from 1994 to 2012, then 18 TIMES
+			showNaicsComplex(); 
+
 	});
 	$scope.$watch("current_naics2", function(){
-		console.log($scope.current_naics2);
+		//console.log($scope.current_naics2);
 		showNaicsBasic();
+		if($scope.current_naics2 != "--"){
+			naicsComplex.style('display', 'none'); // This is so that the selections will be hidden until they are loaded
+			showNaicsComplex();
+		}
+	});
+	$scope.$watch("current_naics_full", function(){
+		console.log("full naics", $scope.current_naics_full);
 		if($scope.current_naics2 != "--")
 			showNaicsComplex();
 	});
-	$scope.$watch("current_naics_full", function(){
-		console.log($scope.current_naics_full);
-		showNaicsComplex();
-	});
 	$scope.$watch("$viewContentLoaded", function(){
 		hideNaics();
+		console.log("content loaded, naics hidden");
 	});
 	var popup = d3.select("#info");
 
 	var naicsBasic = d3.select("#naics").select("#naicsBasic");
 	var naicsComplex = d3.select("#naics").select("#naicsComplex");
-	console.log(naicsBasic, naicsComplex);
+	//console.log(naicsBasic, naicsComplex);
 	$scope.current_naics2 = "--";
 	$scope.current_naics_full = "------";
 	var naicsData;
@@ -54,7 +61,6 @@ function ZipCtrl($scope){
 	second appears once first selected, allows user to specify a NAICS based off the first two numbers
 
 	Map the emp data?
-	The angular value thing isn't working, returning 18 or wwhatever number you pick.
 	*/
 	var legendChange = function(){
 		legend.html(function(){
@@ -122,11 +128,6 @@ function ZipCtrl($scope){
 		ziplayer.transition();
 	}
 
-	$scope.basicStationClick = function(id){
-		$scope.current_naics2 = id;
-		console.log(id);
-	}
-
 	function showPopup(d) {
 		popup.style("display", "block");
 		var i = 0,
@@ -145,27 +146,27 @@ function ZipCtrl($scope){
 			toRet += str.substring(ct1, toRet.length);
 			return toRet;
 		}
-		while(i < $scope.current_data.data.rows.length){
-			if($scope.current_data.data.rows[i].f[1].v === d.properties.geoid.toString() && $scope.current_data.data.rows[i].f[0].v === $scope.year){
-				//console.log(($scope.current_data.data.rows[ti].f[0].v));
-				if($scope.dataMode === 4){
-					//console.log($scope.current_data.data.rows[i].f[3].v);
-					data = $scope.current_data.data.rows[i].f[2].v/$scope.current_data.data.rows[i].f[3].v;
+			while(i < $scope.current_data.data.rows.length){
+				if($scope.current_data.data.rows[i].f[1].v === d.properties.geoid.toString() && $scope.current_data.data.rows[i].f[0].v === $scope.year){
+					//console.log(($scope.current_data.data.rows[ti].f[0].v));
+					if($scope.dataMode === 4){
+						//console.log($scope.current_data.data.rows[i].f[3].v);
+						data = $scope.current_data.data.rows[i].f[2].v/$scope.current_data.data.rows[i].f[3].v;
+					}
+					else
+						data = $scope.current_data.data.rows[i].f[$scope.dataMode].v;
+					
+					if($scope.year > 1996)
+						name = normCityName($scope.current_data.data.rows[i].f[4].v);
+					else{
+						name = $scope.current_data.data.rows[i].f[4].v;
+					}
+					break;
 				}
-				else
-					data = $scope.current_data.data.rows[i].f[$scope.dataMode].v;
-				
-				if($scope.year > 1996)
-					name = normCityName($scope.current_data.data.rows[i].f[4].v);
-				else{
-					name = $scope.current_data.data.rows[i].f[4].v;
-				}
-				break;
+				i++;
 			}
-			i++;
-		}
-		//console.log(name, " ", data);
-		popup.html($scope.year + "<br>" + name + "<br>" + data);
+			//console.log(name, " ", data);
+			popup.html($scope.year + "<br>" + name + "<br>" + data);
 	}
 
 	function movePopup() {
@@ -223,21 +224,20 @@ function ZipCtrl($scope){
 		naicsBasic.style('display', 'block');
 		d3.json('/zipNaics') // param 2dNaics
 			.post(JSON.stringify({twoDNaics: $scope.current_naics2}), function(err,data){
-				$scope.fullNaicsKey = data.data.rows;
-				//$scope.$apply($scope.fullNaicsKey = data.data.rows)
+				//$scope.fullNaicsKey = data.data.rows;
+				$scope.$apply($scope.fullNaicsKey = data.data.rows)
 				console.log("full key", $scope.fullNaicsKey);
 			})
-				
 	}
 	function showNaicsComplex() {
-		naicsComplex.style("display", "block");
-		if($scope.current_naics_full != "111111"){
-			d3.json('/zipNaicsData')
-				.post(JSON.stringify({naics:$scope.current_naics_full,year:$scope.year}), function(error, data){
-					naicsData = data;
-					console.log("zipData", data);
-				})		
-		}
+
+		d3.json('/zipNaicsData')
+			.post(JSON.stringify({naics:$scope.current_naics_full,year:$scope.year}), function(error, data){
+				$scope.$apply(naicsData = data);
+				console.log("zipData", data);
+				naicsComplex.style('display', 'block');
+
+			})		
 	}
 
 	function hideNaics(){

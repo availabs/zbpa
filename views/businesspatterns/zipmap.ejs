@@ -46,7 +46,9 @@
 #naicsComplex {
 	display:none;
 }
-
+/*#naics {
+	display: none;
+}*/
 li.key {
 	border-top-width: 15px; 
 	border-top-style: solid;
@@ -88,7 +90,7 @@ li.key {
 	  	<div id="naicsComplex">
 	  		<div class="controls form-group">
 	  			<select class="form-control" style="width:100%"; class="chzn-select select-block-level" id="default-select" ng-model="current_naics_full">
-					<option ng-repeat="naics in fullNaicsKey" value="{{$index}}">{{naics.f[0].v}}</option>
+					<option ng-repeat="naics in fullNaicsKey" value="{{naics.f[0].v}}">{{naics.f[0].v}}</option>
 				</select>	  			
 	  		</div>
 	  	</div>
