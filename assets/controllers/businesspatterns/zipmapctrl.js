@@ -134,6 +134,7 @@ function ZipCtrl($scope){
 			data,
 			name;
 		function normCityName(str){
+			console.log('normCityName')
 			var ct1 = 1;
 			var toRet = str.substring(0);
 			while(str.substring(ct1) !== ","){
@@ -146,27 +147,28 @@ function ZipCtrl($scope){
 			toRet += str.substring(ct1, toRet.length);
 			return toRet;
 		}
-			while(i < $scope.current_data.data.rows.length){
-				if($scope.current_data.data.rows[i].f[1].v === d.properties.geoid.toString() && $scope.current_data.data.rows[i].f[0].v === $scope.year){
-					//console.log(($scope.current_data.data.rows[ti].f[0].v));
-					if($scope.dataMode === 4){
-						//console.log($scope.current_data.data.rows[i].f[3].v);
-						data = $scope.current_data.data.rows[i].f[2].v/$scope.current_data.data.rows[i].f[3].v;
-					}
-					else
-						data = $scope.current_data.data.rows[i].f[$scope.dataMode].v;
-					
-					if($scope.year > 1996)
-						name = normCityName($scope.current_data.data.rows[i].f[4].v);
-					else{
-						name = $scope.current_data.data.rows[i].f[4].v;
-					}
-					break;
+		console.log('line150, getting the right data?');
+		while(i < $scope.current_data.data.rows.length){ //
+			if($scope.current_data.data.rows[i].f[1].v === d.properties.geoid.toString() && $scope.current_data.data.rows[i].f[0].v === $scope.year){
+				//console.log(($scope.current_data.data.rows[ti].f[0].v));
+				if($scope.dataMode === 4){
+					//console.log($scope.current_data.data.rows[i].f[3].v);
+					data = $scope.current_data.data.rows[i].f[2].v/$scope.current_data.data.rows[i].f[3].v;
 				}
-				i++;
+				else
+					data = $scope.current_data.data.rows[i].f[$scope.dataMode].v;
+				
+				if($scope.year > 1996)
+					name = normCityName($scope.current_data.data.rows[i].f[4].v);
+				else{
+					name = $scope.current_data.data.rows[i].f[4].v;
+				}
+				break;
 			}
-			//console.log(name, " ", data);
-			popup.html($scope.year + "<br>" + name + "<br>" + data);
+			i++;
+		}
+		//console.log(name, " ", data);
+		popup.html($scope.year + "<br>" + name + "<br>" + data);
 	}
 
 	function movePopup() {
@@ -218,6 +220,7 @@ function ZipCtrl($scope){
 			sortedData[y][z] = d; //each final data thingy is an array of v objs.
 			ti++;
 		}
+		return dd;
 	}
 
 	function showNaicsBasic(){
@@ -245,6 +248,10 @@ function ZipCtrl($scope){
 		naicsComplex.style("display", "none");
 	}
 
+	/*
+		TODO: data is actually sorted now, so that should be utilized. Minimize looping
+	*/
+
 	d3.json('/zipData')
 		.post(function(err,data){
 			$scope.current_data = data;		
@@ -253,7 +260,8 @@ function ZipCtrl($scope){
 			data.data.rows.map(function(zip){
 				scaleDomain.push(+zip.f[$scope.dataMode].v)
 			});
-			sortData();	
+			$scope.current_data = sortData();	
+			console.log($scope.current_data);
 			//var sortedData = {'year':{'12203':[], '12204':[]},'1995':{'12203':[],'12223',}}
 			//sortedData[1995]['12203'] = []
 
